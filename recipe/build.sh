@@ -1,4 +1,4 @@
 #!/usr/bin/env bash
 ./configure --prefix=$PREFIX
-make
+make -j${CPU_COUNT} ${VERBOSE_AT}
 make install
