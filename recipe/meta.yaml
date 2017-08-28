@@ -18,7 +18,7 @@ build:
 requirements:
   build:
     - libffi
-    - libiconv
+    - libiconv  # [not linux and not win]
 
 test:
   commands:
