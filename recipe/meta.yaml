@@ -12,11 +12,12 @@ source:
   sha256: {{ sha256 }}
 
 build:
-  number: 0
-  skip: true  # [win]
+  number: 1
+  skip: True  # [win]
 
 requirements:
   build:
+    - {{ compiler('c') }}
     - libffi
     - libiconv  # [not linux and not win]
 
