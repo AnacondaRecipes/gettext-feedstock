@@ -12,8 +12,11 @@ source:
   sha256: {{ sha256 }}
 
 build:
-  number: 2
+  number: 3
   skip: True  # [win]
+  run_exports:
+    # Seems pretty good: https://abi-laboratory.pro/tracker/timeline/gettext/
+    - {{ pin_subpackage('gettext') }}
 
 requirements:
   build:
