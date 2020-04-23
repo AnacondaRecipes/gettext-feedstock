@@ -1,15 +1,17 @@
-{% set version = "0.19.8.1" %}
+{% set name = "gettext" %}
+{% set version = "0.20.2" %}
+{% set sha256 = "b22b818e644c37f6e3d1643a1943c32c3a9bff726d601e53047d2682019ceaba" %}
 {% set am_version = "1.15" %} #  keep synchronized with build.sh
 {% set posix = 'm2-' if win else '' %}
 {% set native = 'm2w64-' if win else '' %}
 
 package:
-  name: gettext
+  name: {{ name|lower }}
   version: {{ version }}
 
 source:
   url: ftp://ftp.gnu.org/pub/gnu/gettext/gettext-{{ version }}.tar.xz
-  sha256: 105556dbc5c3fbbc2aa0edb46d22d055748b6f5c7cd7a8d99f8e7eb84e938be4
+  sha256: {{ sha256 }}
   patches:
     - 0001-Mark-v-snprintf-as-available.patch                          # [win]
     - 0002-Prevent-libtool-from-worrying-about-dependent-librar.patch  # [win]
@@ -22,7 +24,8 @@ source:
     - 0009-Use-the-C-hack-in-a-few-more-files.patch                    # [win]
 
 build:
-  number: 1002
+  number: 0
+  skip: True  # [linux]
   run_exports:
     # Seems pretty good: https://abi-laboratory.pro/tracker/timeline/gettext/
     - {{ pin_subpackage('gettext') }}
@@ -37,11 +40,12 @@ requirements:
     - {{native}}binutils                 # [win]
     - {{native}}crt-git                  # [win]
     - {{ compiler('c') }}                # [not win]
+    - {{ compiler('cxx') }}              # [osx]
     - make                               # [unix]
     - vs2015_win-64                      # [win] -- no VS2008 since it's just a pain to work with
   host:
-    - libffi
-    - libiconv  # [not linux]
+    - libiconv
+    - libxml2
 
 test:
   commands:

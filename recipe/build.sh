@@ -60,4 +60,7 @@ make install
 # This overlaps with readline:
 rm -rf ${PREFIX}/share/info/dir
 
+# Reduced 0.20.2 package from 3924438 bytes (in 1916 files) to 3574052 bytes (in 306 files)
+rm -rf ${PREFIX}/share/doc/gettext/examples
+
 find $PREFIX -name '*.la' -delete
