@@ -73,6 +73,7 @@ requirements:
     - {{native}}crt-git                  # [win]
     - {{ compiler('c') }}                # [not win]
     - {{ compiler('cxx') }}              # [osx]
+    - pkg-config                         # [not win]
     - libtool                            # [not win]
     - automake                           # [not win]
     - autoconf                           # [not win]

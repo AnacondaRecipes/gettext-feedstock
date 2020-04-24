@@ -2,6 +2,7 @@
 
 set -e
 
+cp ${BUILD_PREFIX}/share/aclocal/pkg.m4 m4/pkg.m4
 [[ -d release-tarball-src ]] && cp release-tarball-src/configure .
 [[ -f configure ]] && cp -f configure configure.orig.1
 
