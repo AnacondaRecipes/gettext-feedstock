@@ -3,7 +3,7 @@
 set -e
 
 [[ -f configure ]] && cp -f configure configure.orig.1
-./autogen.sh --skip-gnulib
+./autogen.sh %SKIP_GNULIB%
 
 if [[ $(uname -o) == "Msys" ]] ; then
     export PREFIX="$LIBRARY_PREFIX_U"

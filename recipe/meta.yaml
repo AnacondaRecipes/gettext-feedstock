@@ -5,6 +5,7 @@
 {% set posix = 'm2-' if win else '' %}
 {% set native = 'm2w64-' if win else '' %}
 {% set from_git = 'yes' %}
+{% set source_gnulib = 'no' %}
 
 package:
   name: {{ name|lower }}
@@ -18,6 +19,9 @@ source:
   # .. rather than this one:
   # - git_url: https://git.savannah.gnu.org/git/gettext.git
     git_ref: v{{ version }}
+{% if source_gnulib == 'no' %}
+    git_depth: 1
+{% endif %}
 {% else %}
   - url: ftp://ftp.gnu.org/pub/gnu/gettext/gettext-{{ version }}.tar.xz
     sha256: {{ sha256 }}
@@ -34,9 +38,11 @@ source:
       - 0008-Add-missing-extern-C-protectors.patch                       # [win]
       - 0009-Use-the-C-hack-in-a-few-more-files.patch                    # [win]
 {% if from_git == 'no' %}
+{% if source_gnulib == 'yes' %}
   - git_url: git://git.sv.gnu.org/gnulib.git
     git_ref: 7397561e64f9b96a4a1638117ce18d06133a60f1
     folder: gnulib
+{% endif %}
 {% endif %}
 
 build:
@@ -45,6 +51,12 @@ build:
   run_exports:
     # Seems pretty good: https://abi-laboratory.pro/tracker/timeline/gettext/
     - {{ pin_subpackage('gettext') }}
+  env:
+{% if source_gnulib == 'yes' %}
+    - SKIP_GNULIB=
+{% else %}
+    - SKIP_GNULIB=--skip-gnulib
+{% endif %}
 
 requirements:
   build:
