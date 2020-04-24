@@ -2,7 +2,7 @@
 
 set -e
 
-cp -f configure configure.orig.1
+[[ -f configure ]] && cp -f configure configure.orig.1
 ./autogen.sh --skip-gnulib
 
 if [[ $(uname -o) == "Msys" ]] ; then
@@ -56,9 +56,9 @@ if [[ $(uname -o) == "Msys" ]] ; then
     autoreconf -vfi
 fi
 
-cp -f configure configure.orig.2
+[[ -f configure ]] && cp -f configure configure.orig.2
 autoreconf -vfi
-cp -f configure configure.orig.3
+[[ -f configure ]] && cp -f configure configure.orig.3
 diff -urN configure.orig.1 configure | tee configure.diff
 ./configure --help | rg curses -C2 | tee configure-help-curses.txt
 
