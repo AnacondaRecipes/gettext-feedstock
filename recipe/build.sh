@@ -2,6 +2,7 @@
 
 set -e
 
+cp -f configure configure.orig.1
 ./autogen.sh --skip-gnulib
 
 if [[ $(uname -o) == "Msys" ]] ; then
@@ -55,9 +56,11 @@ if [[ $(uname -o) == "Msys" ]] ; then
     autoreconf -vfi
 fi
 
-cp -f configure configure.orig
+cp -f configure configure.orig.2
 autoreconf -vfi
-diff -urN configure.orig configure | tee configure.diff
+cp -f configure configure.orig.3
+diff -urN configure.orig.1 configure | tee configure.diff
+./configure --help | rg curses -C2 | tee configure-help-curses.txt
 
 ./configure  \
   --prefix=$PREFIX \

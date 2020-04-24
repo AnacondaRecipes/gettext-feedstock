@@ -4,14 +4,24 @@
 {% set am_version = "1.15" %} #  keep synchronized with build.sh
 {% set posix = 'm2-' if win else '' %}
 {% set native = 'm2w64-' if win else '' %}
+{% set from_git = 'yes' %}
 
 package:
   name: {{ name|lower }}
   version: {{ version }}
 
 source:
+{% if from_git == 'yes' %}
+  # caching the gnulib submodule stands a chance of working via
+  # this URL:
+  - git_url: git://git.sv.gnu.org/gettext.git
+  # .. rather than this one:
+  # - git_url: https://git.savannah.gnu.org/git/gettext.git
+    git_ref: v{{ version }}
+{% else %}
   - url: ftp://ftp.gnu.org/pub/gnu/gettext/gettext-{{ version }}.tar.xz
     sha256: {{ sha256 }}
+{% endif %}
     patches:
       - 0000-Add-ax_with_curses.m4-and-try-to-use-it.patch
       - 0001-Mark-v-snprintf-as-available.patch                          # [win]
@@ -23,9 +33,11 @@ source:
       - 0007-Work-around-Unixisms-in-libgettextpo.patch                  # [win]
       - 0008-Add-missing-extern-C-protectors.patch                       # [win]
       - 0009-Use-the-C-hack-in-a-few-more-files.patch                    # [win]
+{% if from_git == 'no' %}
   - git_url: git://git.sv.gnu.org/gnulib.git
     git_ref: 7397561e64f9b96a4a1638117ce18d06133a60f1
     folder: gnulib
+{% endif %}
 
 build:
   number: 0
