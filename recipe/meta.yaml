@@ -10,18 +10,22 @@ package:
   version: {{ version }}
 
 source:
-  url: ftp://ftp.gnu.org/pub/gnu/gettext/gettext-{{ version }}.tar.xz
-  sha256: {{ sha256 }}
-  patches:
-    - 0001-Mark-v-snprintf-as-available.patch                          # [win]
-    - 0002-Prevent-libtool-from-worrying-about-dependent-librar.patch  # [win]
-    - 0003-Fix-some-DLL-export-markings-in-libintl.patch               # [win]
-    - 0004-Fix-quoting-when-invoking-windres.patch                     # [win]
-    - 0005-CXXLD-is-not-a-thing.patch                                  # [win]
-    - 0006-Fix-an-inconsistent-noreturn-marking-in-gettext-tool.patch  # [win]
-    - 0007-Work-around-Unixisms-in-libgettextpo.patch                  # [win]
-    - 0008-Add-missing-extern-C-protectors.patch                       # [win]
-    - 0009-Use-the-C-hack-in-a-few-more-files.patch                    # [win]
+  - url: ftp://ftp.gnu.org/pub/gnu/gettext/gettext-{{ version }}.tar.xz
+    sha256: {{ sha256 }}
+    patches:
+      - 0000-Add-ax_with_curses.m4-and-try-to-use-it.patch
+      - 0001-Mark-v-snprintf-as-available.patch                          # [win]
+      - 0002-Prevent-libtool-from-worrying-about-dependent-librar.patch  # [win]
+      - 0003-Fix-some-DLL-export-markings-in-libintl.patch               # [win]
+      - 0004-Fix-quoting-when-invoking-windres.patch                     # [win]
+      - 0005-CXXLD-is-not-a-thing.patch                                  # [win]
+      - 0006-Fix-an-inconsistent-noreturn-marking-in-gettext-tool.patch  # [win]
+      - 0007-Work-around-Unixisms-in-libgettextpo.patch                  # [win]
+      - 0008-Add-missing-extern-C-protectors.patch                       # [win]
+      - 0009-Use-the-C-hack-in-a-few-more-files.patch                    # [win]
+  - git_url: git://git.sv.gnu.org/gnulib.git
+    git_ref: 7397561e64f9b96a4a1638117ce18d06133a60f1
+    folder: gnulib
 
 build:
   number: 0
@@ -41,9 +45,13 @@ requirements:
     - {{native}}crt-git                  # [win]
     - {{ compiler('c') }}                # [not win]
     - {{ compiler('cxx') }}              # [osx]
+    - libtool
+    - automake
+    - autoconf
     - make                               # [unix]
     - vs2015_win-64                      # [win] -- no VS2008 since it's just a pain to work with
   host:
+    - ncurses
     - libiconv
     - libxml2
 

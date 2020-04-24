@@ -2,6 +2,8 @@
 
 set -e
 
+./autogen.sh --skip-gnulib
+
 if [[ $(uname -o) == "Msys" ]] ; then
     export PREFIX="$LIBRARY_PREFIX_U"
     export PATH="$PATH_OVERRIDE"
@@ -53,7 +55,14 @@ if [[ $(uname -o) == "Msys" ]] ; then
     autoreconf -vfi
 fi
 
-./configure --prefix=$PREFIX --build=$BUILD --host=$HOST
+cp -f configure configure.orig
+autoreconf -vfi
+diff -urN configure.orig configure | tee configure.diff
+
+./configure  \
+  --prefix=$PREFIX \
+  --build=$BUILD  \
+  --host=$HOST
 make -j${CPU_COUNT} ${VERBOSE_AT}
 make install
 
