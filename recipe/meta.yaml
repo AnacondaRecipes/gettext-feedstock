@@ -22,6 +22,10 @@ source:
 {% if source_gnulib == 'no' %}
     git_depth: 0
 {% endif %}
+  # Just so we get a configure to diff against.
+  - url: ftp://ftp.gnu.org/pub/gnu/gettext/gettext-{{ version }}.tar.xz
+    sha256: {{ sha256 }}
+    folder: release-tarball-src
 {% else %}
   - url: ftp://ftp.gnu.org/pub/gnu/gettext/gettext-{{ version }}.tar.xz
     sha256: {{ sha256 }}

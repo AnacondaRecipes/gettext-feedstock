@@ -2,7 +2,9 @@
 
 set -e
 
+[[ -d release-tarball-src ]] && cp release-tarball-src/configure .
 [[ -f configure ]] && cp -f configure configure.orig.1
+
 ./autogen.sh %SKIP_GNULIB%
 
 if [[ $(uname -o) == "Msys" ]] ; then
