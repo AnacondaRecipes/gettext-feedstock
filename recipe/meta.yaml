@@ -72,7 +72,8 @@ requirements:
     - {{native}}binutils                 # [win]
     - {{native}}crt-git                  # [win]
     - {{ compiler('c') }}                # [not win]
-    - {{ compiler('cxx') }}              # [osx]
+    # Used by libasprintf
+    - {{ compiler('cxx') }}              # [not win]
     - pkg-config                         # [not win]
     - libtool                            # [not win]
     - automake                           # [not win]
