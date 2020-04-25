@@ -68,13 +68,21 @@ diff -urN configure.orig.1 configure | tee configure.diff
 ./configure --help | rg curses -C2 | tee configure-help-curses.txt
 fi
 
+bash -x ./configure  \
+  --prefix=$PREFIX \
+  --build=$BUILD  \
+  --host=$HOST  \
+  --with-libncurses-prefix=${PREFIX}  \
+  --with-libtermcap-prefix=${PREFIX} 2>&1 | tee config-x.log
 ./configure  \
   --prefix=$PREFIX \
   --build=$BUILD  \
   --host=$HOST  \
-  --with-libncurses-prefix=${PREFIX}
-make -j${CPU_COUNT} ${VERBOSE_AT}
-make install
+  --with-libncurses-prefix=${PREFIX}  \
+  --with-libtermcap-prefix=${PREFIX} 2>&1 | tee config-nox.log
+
+make -j${CPU_COUNT} ${VERBOSE_AT} 2>&1 | tee compile.log
+make install 2>&1 | tee install.log
 
 # This overlaps with readline:
 rm -rf ${PREFIX}/share/info/dir

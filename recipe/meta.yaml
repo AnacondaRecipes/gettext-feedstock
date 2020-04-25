@@ -79,7 +79,7 @@ requirements:
     - autoconf                           # [not win]
     - autoconf-archive                   # [not win]
     - make                               # [unix]
-    - vs2015_win-64                      # [win] -- no VS2008 since it's just a pain to work with
+    - vs2015_win-64                      # [win]
   host:
     - ncurses  # [not win]
     - libiconv
