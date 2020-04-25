@@ -2,6 +2,8 @@
 
 set -e
 
+if [[ 0 == 1 ]]; then
+
 cp ${BUILD_PREFIX}/share/aclocal/pkg.m4 m4/pkg.m4
 [[ -d release-tarball-src ]] && cp release-tarball-src/configure .
 [[ -f configure ]] && cp -f configure configure.orig.1
@@ -64,11 +66,13 @@ autoreconf -vfi
 [[ -f configure ]] && cp -f configure configure.orig.3
 diff -urN configure.orig.1 configure | tee configure.diff
 ./configure --help | rg curses -C2 | tee configure-help-curses.txt
+fi
 
 ./configure  \
   --prefix=$PREFIX \
   --build=$BUILD  \
-  --host=$HOST
+  --host=$HOST  \
+  --with-libncurses-prefix=${PREFIX}
 make -j${CPU_COUNT} ${VERBOSE_AT}
 make install
 
