@@ -51,10 +51,9 @@ source:
 
 build:
   number: 0
-  # skip: True  # [linux]
-  skip: true  # [win]
+  skip: true          # [win]
   ignore_run_exports: # [not win]
-    - ncurses  # [not win]
+    - ncurses         # [not win]
   run_exports:
     # Seems pretty good: https://abi-laboratory.pro/tracker/timeline/gettext/
     - {{ pin_subpackage('gettext') }}
@@ -84,12 +83,13 @@ requirements:
     - make                               # [unix]
     - vs2015_win-64                      # [win]
   host:
-    - ncurses  # [not win]
-    - libiconv # [osx]
+    - ncurses                            # [not win]
+    - libiconv                           # [osx]
     - libxml2
-    - llvm-openmp       # [osx]
+    - llvm-openmp                        # [osx]
   run:
-    - libstdcxx-ng # [linux]
+    - libstdcxx-ng                       # [linux]
+    - llvm-openmp                        # [osx]
 test:
   commands:
     {% set lib_idents = [ "gettextlib", "gettextpo", "gettextsrc" ] %}
