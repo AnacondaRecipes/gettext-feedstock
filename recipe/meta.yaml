@@ -51,7 +51,9 @@ source:
 
 build:
   number: 0
-  # skip: True  # [linux]
+  skip: true          # [win]
+  ignore_run_exports: # [not win]
+    - ncurses         # [not win]
   run_exports:
     # Seems pretty good: https://abi-laboratory.pro/tracker/timeline/gettext/
     - {{ pin_subpackage('gettext') }}
@@ -72,8 +74,7 @@ requirements:
     - {{native}}binutils                 # [win]
     - {{native}}crt-git                  # [win]
     - {{ compiler('c') }}                # [not win]
-    # Used by libasprintf
-    - {{ compiler('cxx') }}              # [not win]
+    - {{ compiler('cxx') }}              # [osx or not win]
     - pkg-config                         # [not win]
     - libtool                            # [not win]
     - automake                           # [not win]
@@ -82,10 +83,13 @@ requirements:
     - make                               # [unix]
     - vs2015_win-64                      # [win]
   host:
-    - ncurses  # [not win]
-    - libiconv
+    - ncurses                            # [not win]
+    - libiconv                           # [osx]
     - libxml2
-
+    - llvm-openmp                        # [osx]
+  run:
+    - libstdcxx-ng                       # [linux]
+    - llvm-openmp                        # [osx]
 test:
   commands:
     {% set lib_idents = [ "gettextlib", "gettextpo", "gettextsrc" ] %}
