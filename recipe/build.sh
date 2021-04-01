@@ -2,13 +2,13 @@
 
 set -e
 
-if [[ 0 == 1 ]]; then
+if [[ 1 == 1 ]]; then
 
 cp ${BUILD_PREFIX}/share/aclocal/pkg.m4 m4/pkg.m4
 [[ -d release-tarball-src ]] && cp release-tarball-src/configure .
 [[ -f configure ]] && cp -f configure configure.orig.1
 
-./autogen.sh %SKIP_GNULIB%
+./autogen.sh --skip-gnulib 
 
 if [[ $(uname -o) == "Msys" ]] ; then
     export PREFIX="$LIBRARY_PREFIX_U"
@@ -59,6 +59,9 @@ if [[ $(uname -o) == "Msys" ]] ; then
     export CXXFLAGS=$(echo " $CXXFLAGS " |sed -e "s, [-/]GL ,,")
 
     autoreconf -vfi
+else
+    autoreconf -vfi
+    automake --add-missing
 fi
 
 [[ -f configure ]] && cp -f configure configure.orig.2
