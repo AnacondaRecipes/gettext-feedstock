@@ -50,7 +50,7 @@ source:
 {% endif %}
 
 build:
-  number: 0
+  number: 1
   skip: true          # [win]
   ignore_run_exports: # [not win]
     - ncurses         # [not win]
