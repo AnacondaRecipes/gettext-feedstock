@@ -91,6 +91,9 @@ requirements:
     - llvm-openmp                        # [osx]
   run:
     - libstdcxx-ng                       # [linux]
+    # Using selector until packages for other platforms are (re)built using
+    # newer defaults toolchains that use the `_openmp_mutex` mechanism.
+    - _openmp_mutex                      # [s390x]
     - llvm-openmp                        # [osx]
 test:
   commands:
