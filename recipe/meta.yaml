@@ -32,6 +32,8 @@ source:
     sha256: {{ sha256 }}
 {% endif %}
     patches:
+      # See https://savannah.gnu.org/bugs/?59929: AC_INIT with proper package and version
+      - use-acinit-for-libtextstyle.patch
       - 0000-Add-ax_with_curses.m4-and-try-to-use-it.patch
       # - 0001-Mark-v-snprintf-as-available.patch                          # [win]
       # - 0002-Prevent-libtool-from-worrying-about-dependent-librar.patch  # [win]
@@ -51,10 +53,7 @@ source:
 {% endif %}
 
 build:
-  number: 0
-  skip: true          # [win]
-  ignore_run_exports: # [not win]
-    - ncurses         # [not win]
+  number: 1
   run_exports:
     # Seems pretty good: https://abi-laboratory.pro/tracker/timeline/gettext/
     - {{ pin_subpackage('gettext') }}
@@ -87,7 +86,7 @@ requirements:
   host:
     - ncurses                            # [not win]
     - libiconv                           # [osx]
-    - libxml2
+    - libxml2 2.10
     - llvm-openmp                        # [osx]
   run:
     - libstdcxx-ng                       # [linux]
@@ -95,6 +94,7 @@ requirements:
     # newer defaults toolchains that use the `_openmp_mutex` mechanism.
     - _openmp_mutex                      # [s390x]
     - llvm-openmp                        # [osx]
+
 test:
   commands:
     {% set lib_idents = [ "gettextlib", "gettextpo", "gettextsrc" ] %}
@@ -107,9 +107,23 @@ test:
 
 about:
   home: https://www.gnu.org/software/gettext/
-  license: GPL-2.0
+  license: GPL-3.0-or-later
+  license_family: GPL
   license_file: COPYING
   summary: Internationalization package
+  description: |
+    GNU gettext is an important step for the GNU Translation Project, 
+    as it is an asset on which we may build many other steps. 
+    This package offers to programmers, translators, and even users, 
+    a well integrated set of tools and documentation. 
+    Specifically, the GNU gettext utilities are a set of tools 
+    that provides a framework to help other GNU packages produce multi-lingual messages. 
+    These tools include a set of conventions about how programs should be written 
+    to support message catalogs, a directory and file naming organization for the message catalogs themselves, 
+    a runtime library supporting the retrieval of translated messages, and a few stand-alone programs 
+    to massage in various ways the sets of translatable strings, or already translated strings.
+  doc_url: https://www.gnu.org/software/gettext/manual/gettext.html
+  dev_url: https://git.savannah.gnu.org/gitweb/?p=gettext.git
 
 extra:
   recipe-maintainers:
