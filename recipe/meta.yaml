@@ -54,6 +54,7 @@ source:
 
 build:
   number: 1
+  skip: true          # [win]
   run_exports:
     # Seems pretty good: https://abi-laboratory.pro/tracker/timeline/gettext/
     - {{ pin_subpackage('gettext') }}
@@ -83,6 +84,7 @@ requirements:
     - make                               # [unix]
     - vs2015_win-64                      # [win]
     - wget                               # [unix]
+    - patch                              # [unix]
   host:
     - ncurses                            # [not win]
     - libiconv                           # [osx]
@@ -90,9 +92,7 @@ requirements:
     - llvm-openmp                        # [osx]
   run:
     - libstdcxx-ng                       # [linux]
-    # Using selector until packages for other platforms are (re)built using
-    # newer defaults toolchains that use the `_openmp_mutex` mechanism.
-    - _openmp_mutex                      # [s390x]
+    - _openmp_mutex                      # [linux]
     - llvm-openmp                        # [osx]
 
 test:
