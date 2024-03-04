@@ -10,7 +10,7 @@
 
 package:
   name: {{ name|lower }}
-  version: {{ version }}
+  version: {{ version }}  # trigger
 
 source:
 {% if from_git == 'yes' %}
