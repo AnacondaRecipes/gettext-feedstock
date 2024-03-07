@@ -1,7 +1,7 @@
 {% set name = "gettext" %}
-{% set version = "0.21.0" %}
-{% set pversion = "0.21" %}
-{% set sha256 = "d20fcbb537e02dcf1383197ba05bd0734ef7bf5db06bdb241eb69b7d16b73192" %}
+{% set version = "0.22.5" %}
+{% set pversion = "0.22.5" %}
+{% set sha256 = "fe10c37353213d78a5b83d48af231e005c4da84db5ce88037d88355938259640" %}
 {% set am_version = "1.15" %} #  keep synchronized with build.sh
 {% set posix = 'm2-' if win else '' %}
 {% set native = 'm2w64-' if win else '' %}
