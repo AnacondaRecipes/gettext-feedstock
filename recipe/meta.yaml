@@ -33,7 +33,7 @@ source:
 {% endif %}
     patches:
       # See https://savannah.gnu.org/bugs/?59929: AC_INIT with proper package and version
-      - use-acinit-for-libtextstyle.patch
+      # - use-acinit-for-libtextstyle.patch
       - 0000-Add-ax_with_curses.m4-and-try-to-use-it.patch
       # - 0001-Mark-v-snprintf-as-available.patch                          # [win]
       # - 0002-Prevent-libtool-from-worrying-about-dependent-librar.patch  # [win]
