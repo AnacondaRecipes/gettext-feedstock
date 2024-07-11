@@ -88,7 +88,7 @@ requirements:
   host:
     - ncurses                            # [not win]
     - libiconv                           # [osx]
-    - libxml2 2.13
+    - libxml2 {{ libxml2 }}
     - llvm-openmp                        # [osx]
   run:
     - libstdcxx-ng                       # [linux]
