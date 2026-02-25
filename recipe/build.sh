@@ -78,3 +78,4 @@ fi
 make -j${CPU_COUNT}
 
 find . -name '*.dll'
+find $PREFIX -name '*.la' -delete
