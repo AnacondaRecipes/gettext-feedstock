@@ -1,16 +1,8 @@
 #!/usr/bin/env bash
 
-set -e
+set -exuo pipefail
 
-if [[ 1 == 1 ]]; then
-
-cp ${BUILD_PREFIX}/share/aclocal/pkg.m4 m4/pkg.m4
-[[ -d release-tarball-src ]] && cp release-tarball-src/configure .
-[[ -f configure ]] && cp -f configure configure.orig.1
-
-./autogen.sh --skip-gnulib 
-
-if [[ $(uname -o) == "Msys" ]] ; then
+if [[ "$target_platform" == win* ]] ; then
     export PREFIX="$LIBRARY_PREFIX_U"
     export PATH="$PATH_OVERRIDE"
     export BUILD=x86_64-pc-mingw64
@@ -22,22 +14,22 @@ if [[ $(uname -o) == "Msys" ]] ; then
     export ACLOCAL=aclocal-$am_version
     export AUTOMAKE=automake-$am_version
 
-    # So, some autoconf checks depend on the C compiler name starting with
-    # "cl" to detect that it's using MSVC. Inside `configure`, the CC variable
-    # gets the path to the "compile" script prepended; this script translates
-    # arguments. But the variable CXX does *not* get changed the same way, and
-    # due to some flags added in gettext, the tests for a working C++ compiler
-    # fail. So we have to manually specify that it should go through the
-    # compile wrapper. Cf:
-    # https://lists.gnu.org/archive/html/autoconf/2009-11/msg00016.html
+    # Automake used to automatically deploy the "compile" wrapper script
+    # that wrapped MSVC to help it work more like Unix compilers. As of
+    # 0.21, we have to provide and use the script ourselves. Ditto for
+    # "ar-lib".
 
-    export CC="cl"
-    export CXX="$(pwd)/build-aux/compile cl"
+    export AR="$RECIPE_DIR/ar-lib lib"
+    export CC="$RECIPE_DIR/compile cl.exe -nologo"
+    export CPP="cl.exe -nologo -E"
+    export CXX="$RECIPE_DIR/compile cl.exe -nologo"
+    export CXXCPP="cl.exe -nologo -E"
     export LD="link"
-    export CPP="cl -nologo -E"
-    export CXXCPP="cl -nologo -E"
+    export NM="dumpbin -symbols"
+    export RANLIB=":"
+    export STRIP=":"
 
-    # Buuut we also need a custom wrapper for `cl -nologo -E` because the
+    # We also need a custom wrapper for `cl -nologo -E` because the
     # invocation of the "windres"/"rc" tool can't handle preprocessor names
     # containing spaces. Windres also breaks if we don't use `--use-temp-file`
     # -- looks like the Cygwin popen() call might not work on Windows.
@@ -50,47 +42,40 @@ if [[ $(uname -o) == "Msys" ]] ; then
     # have any needed Windows OS libraries specified anywhere, but it doesn't,
     # so we add them here too.
 
-    export LDFLAGS="$LDFLAGS -L/mingw-w64/x86_64-w64-mingw32/lib -L$PREFIX/lib -ladvapi32"
+    export LDFLAGS="${LDFLAGS:-} -L/mingw-w64/x86_64-w64-mingw32/lib -L$PREFIX/lib"
 
-    # /GL messes up Libtool's identification of how the linker works;
+    # We need the -MD flag ("link with MSVCRT.lib"); otherwise our executables
+    # can crash with error -1073740791 = 0xC0000409 = STATUS_STACK_BUFFER_OVERRUN
+    #
+    # But -GL messes up Libtool's identification of how the linker works;
     # it parses dumpbin output and: https://stackoverflow.com/a/11850034/3760486
 
-    export CFLAGS=$(echo " $CFLAGS " |sed -e "s, [-/]GL ,,")
-    export CXXFLAGS=$(echo " $CXXFLAGS " |sed -e "s, [-/]GL ,,")
+    export CFLAGS=$(echo "-MD ${CFLAGS:-} " |sed -e "s, [-/]GL ,,")
+    export CXXFLAGS=$(echo "-MD ${CXXFLAGS:-} " |sed -e "s, [-/]GL ,,")
 
     autoreconf -vfi
 else
-    autoreconf -vfi
-    automake --add-missing
+    # Get an updated config.sub and config.guess
+   cp $BUILD_PREFIX/share/libtool/build-aux/config.* build-aux/
+   export CPP="$CC -E"
 fi
 
-[[ -f configure ]] && cp -f configure configure.orig.2
-autoreconf -vfi
-[[ -f configure ]] && cp -f configure configure.orig.3
-diff -urN configure.orig.1 configure | tee configure.diff
-./configure --help | rg curses -C2 | tee configure-help-curses.txt
-fi
-
-bash -x ./configure  \
+./configure \
   --prefix=$PREFIX \
-  --build=$BUILD  \
-  --host=$HOST  \
-  --with-libncurses-prefix=${PREFIX}  \
-  --with-libtermcap-prefix=${PREFIX} 2>&1 | tee config-x.log
-./configure  \
-  --prefix=$PREFIX \
-  --build=$BUILD  \
-  --host=$HOST  \
-  --with-libncurses-prefix=${PREFIX}  \
-  --with-libtermcap-prefix=${PREFIX} 2>&1 | tee config-nox.log
+  --build=$BUILD \
+  --host=$HOST \
+  --with-libiconv-prefix=$PREFIX \
+  --disable-static \
+  --disable-csharp \
+  --disable-dependency-tracking \
+  --disable-java \
+  --disable-native-java \
+  --disable-openmp \
+  --enable-fast-install \
+  --with-libncurses-prefix=${PREFIX} \
+  --without-emacs || (cat config.log; cat gettext-runtime/config.log; exit 1)
 
-make -j${CPU_COUNT} ${VERBOSE_AT} 2>&1 | tee compile.log
-make install 2>&1 | tee install.log
+make -j${CPU_COUNT}
 
-# This overlaps with readline:
-rm -rf ${PREFIX}/share/info/dir
-
-# Reduced 0.20.2 package from 3924438 bytes (in 1916 files) to 3574052 bytes (in 306 files)
-rm -rf ${PREFIX}/share/doc/gettext/examples
-
+find . -name '*.dll'
 find $PREFIX -name '*.la' -delete
