@@ -72,6 +72,7 @@ fi
   --disable-native-java \
   --disable-openmp \
   --enable-fast-install \
+  --with-libncurses-prefix=${PREFIX} \
   --without-emacs || (cat config.log; cat gettext-runtime/config.log; exit 1)
 
 make -j${CPU_COUNT}

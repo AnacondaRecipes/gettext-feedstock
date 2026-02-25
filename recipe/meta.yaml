@@ -50,6 +50,7 @@ requirements:
     - make                               # [unix]
   host:
     - libiconv {{ libiconv }}
+    - ncurses {{ ncurses }}              # [not win]
 
 outputs:
   - name: libintl
@@ -339,6 +340,8 @@ outputs:
     test:
       files:
         - an.po
+      requires:
+        - ncurses {{ ncurses }}              # [not win]
       commands:
         - msgfmt.exe --help  # [win]
         - msgfmt.exe -o an.gmo an.po                 # [win]
@@ -397,14 +400,26 @@ outputs:
         - {{ pin_subpackage('libgettextpo', exact=True ) }}
     test:
       commands:
-        {% set lib_idents = [ "gettextlib", "gettextpo", "gettextsrc" ] %}
-        {% set lib_idents = lib_idents + [ "intl" ] %}                         # [not linux]
-        {% for lib_ident in lib_idents %}
-        - test -f ${PREFIX}/lib/lib{{ lib_ident }}$SHLIB_EXT                   # [not win]
-        - test ! -f ${PREFIX}/lib/lib{{ lib_ident }}.a                         # [not win]
-        - if not exist %PREFIX%\Library\lib\{{ lib_ident }}.dll.lib exit /b 1  # [win]
-        - if not exist %PREFIX%\Library\bin\{{ lib_ident }}-*.dll exit /b 1    # [win]
-        {% endfor %}
+        # ===== gettextlib =====
+        - test -f ${PREFIX}/lib/libgettextlib$SHLIB_EXT                   # [not win]
+        - test ! -f ${PREFIX}/lib/libgettextlib.a                         # [not win]
+        - if not exist %PREFIX%\Library\lib\gettextlib.dll.lib exit /b 1  # [win]
+        - if not exist %PREFIX%\Library\bin\gettextlib-*.dll exit /b 1    # [win]
+        # ===== gettextpo =====
+        - test -f ${PREFIX}/lib/libgettextpo$SHLIB_EXT                    # [not win]
+        - test ! -f ${PREFIX}/lib/libgettextpo.a                          # [not win]
+        - if not exist %PREFIX%\Library\lib\gettextpo.dll.lib exit /b 1   # [win]
+        - if not exist %PREFIX%\Library\bin\gettextpo-*.dll exit /b 1     # [win]
+        # ===== gettextsrc =====
+        - test -f ${PREFIX}/lib/libgettextsrc$SHLIB_EXT                   # [not win]
+        - test ! -f ${PREFIX}/lib/libgettextsrc.a                         # [not win]
+        - if not exist %PREFIX%\Library\lib\gettextsrc.dll.lib exit /b 1  # [win]
+        - if not exist %PREFIX%\Library\bin\gettextsrc-*.dll exit /b 1    # [win]
+        # ===== intl (not on linux) =====
+        - test -f ${PREFIX}/lib/libintl$SHLIB_EXT                         # [not win and not linux]
+        - test ! -f ${PREFIX}/lib/libintl.a                               # [not win and not linux]
+        - if not exist %PREFIX%\Library\lib\intl.dll.lib exit /b 1        # [win]
+        - if not exist %PREFIX%\Library\bin\intl-*.dll exit /b 1          # [win]
     about:
       home: https://www.gnu.org/software/gettext
       license: LGPL-2.1-or-later AND GPL-3.0-or-later
