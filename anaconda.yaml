@@ -1,0 +1,14 @@
+anaconda_config_version: 1
+upstream_sources:
+  - webpage:
+      url: https://ftp.gnu.org/pub/gnu/gettext/
+      regex: gettext-([\d.]+)\.tar\.xz
+    packages:
+      - gettext
+      - gettext-tools
+      - libasprintf
+      - libasprintf-devel
+      - libgettextpo
+      - libgettextpo-devel
+      - libintl
+      - libintl-devel
