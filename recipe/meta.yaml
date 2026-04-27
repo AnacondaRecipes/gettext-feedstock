@@ -31,7 +31,7 @@ source:
     - patches/0008-Declaration-ordering.patch              # [win]
 
 build:
-  number: 0
+  number: 1
   skip: true  # [win]
 
 requirements:
@@ -51,6 +51,7 @@ requirements:
   host:
     - libiconv {{ libiconv }}
     - ncurses {{ ncurses }}              # [not win]
+    - libxml2 {{ libxml2 }}
 
 outputs:
   - name: libintl
@@ -329,6 +330,7 @@ outputs:
       host:
         - libiconv {{ libiconv }}
         - ncurses {{ ncurses }}              # [not win]
+        - libxml2 {{ libxml2 }}
         - {{ pin_subpackage('libintl', exact=True) }}  # [not linux]
         - {{ pin_subpackage('libasprintf', exact=True ) }}
         - {{ pin_subpackage('libgettextpo', exact=True ) }}
@@ -338,6 +340,7 @@ outputs:
         - {{ pin_subpackage('libgettextpo-devel', exact=True ) }}
       run:
         - {{ pin_subpackage('libintl', exact=True) }}  # [not linux]
+        - libxml2 {{ libxml2 }}
     test:
       files:
         - an.po
