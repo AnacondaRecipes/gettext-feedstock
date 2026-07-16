@@ -434,6 +434,7 @@ about:
   home: https://www.gnu.org/software/gettext
   license: LGPL-2.1-or-later AND GPL-3.0-or-later
   license_file: COPYING
+  license_family: LGPL
   summary: Internationalization package
   description: |
     gettext utilities are a set of tools that provides a framework to help 
@@ -450,3 +451,5 @@ extra:
     - ocefpaf
     - pkgw
     - xhochy
+  skip-lints:
+    - reachable_url
