@@ -1,7 +1,7 @@
 {% set version = "1.0" %}
 {% set am_version = "1.15" %}  #  keep synchronized with build.sh
-{% set posix = "'m2-' if win else ''" %}
-{% set native = "'m2w64-' if win else ''" %}
+{% set posix = 'm2-' if win else '' %}
+{% set native = 'm2w64-' if win else '' %}
 
 # Note: as of 0.23.1, we have given up on trying to build gettext on Windows
 # with MSVC -- there are new patterns that may make it simply impossible due to
